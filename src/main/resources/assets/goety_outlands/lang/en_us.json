@@ -1,13 +1,32 @@
 {
   "itemGroup.goety_outlands.goety_outlands_tab_items": "Goety: Outlands",
   "itemGroup.goety_outlands.goety_outlands_tab_spawn_eggs": "Outlands: Servants",
+  "itemGroup.goety_outlands.goety_outlands_tab_focuses": "Outlands: Focuses",
 
 
   "entity.goety_outlands.illager_necromancer_servant": "Illager Necromancer Servant",
   "entity.goety_outlands.archmage_necromancer_servant": "Archmage Necromancer Servant",
+  "entity.goety_outlands.wilden_hunter_servant": "Wilden Hunter Servant",
   "entity.goety_outlands.ominous_soul_bolt": "Ominous Soul Bolt",
 
 
   "item.goety_outlands.illager_necromancer_servant_spawn_egg": "Illager Necromancer Servant Spawn Egg",
-  "item.goety_outlands.archmage_necromancer_servant_spawn_egg": "Archmage Necromancer Servant Spawn Egg"
+  "item.goety_outlands.archmage_necromancer_servant_spawn_egg": "Archmage Necromancer Servant Spawn Egg",
+  "item.goety_outlands.wilden_hunter_servant_spawn_egg": "Wilden Hunter Servant Spawn Egg",
+  "item.goety_outlands.wilden_hunt_focus": "Wilden Hunt Focus",
+  "item.goety_outlands.wilden_hunt_focus.info": "Summons Wilden Hunter Servants. Cast crouching will summon the caster's servants towards them.",
+
+  "config.goety_outlands.necromancers": "Outlands: Necromancer Servant Settings",
+  "config.goety_outlands.necromancers.illager": "Illager",
+  "config.goety_outlands.necromancers.archmage": "Archmage",
+  "config.goety_outlands.necromancers.baseHealth": "Base health",
+  "config.goety_outlands.necromancers.baseHealth.description": "Maximum health at level 0. Levels 1 and 2 use 1.25 and 2.5 times this value, up to the health attribute cap.",
+  "config.goety_outlands.necromancers.baseAttackDamage": "Base attack damage",
+  "config.goety_outlands.necromancers.baseAttackDamage.description": "Damage per normal projectile before rank and other bonuses. Does not affect player spells or summoned minions.",
+  "config.goety_outlands.necromancers.summonLimit": "Limit per player",
+  "config.goety_outlands.necromancers.summonLimit.description": "Limits new bindings and revivals for this servant type. Lowering the limit does not remove existing servants.",
+  "config.goety_outlands.necromancers.fieldName": "%s: %s",
+  "config.goety_outlands.necromancers.details": "%s\nDefault: %s; range: %s to %s",
+  "config.goety_outlands.necromancers.serverNote": "Edits the local config. Multiplayer uses the server's settings.",
+  "config.goety_outlands.necromancers.save": "Save"
 }

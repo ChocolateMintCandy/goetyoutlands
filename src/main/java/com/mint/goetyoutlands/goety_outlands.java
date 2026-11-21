@@ -4,6 +4,7 @@ import com.mint.goetyoutlands.Register.ModEntities;
 import com.mint.goetyoutlands.Register.ModItems;
 import com.mint.goetyoutlands.Register.ModParticles;
 import com.mint.goetyoutlands.Register.goety_outlandsTab;
+import com.mint.goetyoutlands.compat.ars.ArchmageArsCombat;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Blocks;
@@ -13,6 +14,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -37,6 +39,10 @@ public class goety_outlands
 
         ModEntities.ENTITY_TYPES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
+        if (hasArsNouveau()) {
+            ModEntities.ARS_ENTITY_TYPES.register(modEventBus);
+            ModItems.ARS_ITEMS.register(modEventBus);
+        }
         ModParticles.PARTICLES.register(modEventBus);
         goety_outlandsTab.CREATIVE_MODE_TABS.register(modEventBus);
 
@@ -53,8 +59,16 @@ public class goety_outlands
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+    public static boolean hasArsNouveau() {
+        return ModList.get().isLoaded("ars_nouveau");
+    }
+
     private void commonSetup(final FMLCommonSetupEvent event)
     {
+        if (hasArsNouveau()) {
+            event.enqueueWork(ArchmageArsCombat::registerDamageModifier);
+        }
+
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
 

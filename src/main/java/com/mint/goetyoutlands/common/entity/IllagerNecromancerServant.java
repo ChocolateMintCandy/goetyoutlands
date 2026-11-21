@@ -14,7 +14,6 @@ import com.Polarice3.Goety.common.items.ModItems;
 import com.Polarice3.Goety.common.items.revive.SoulJar;
 import com.Polarice3.Goety.common.magic.ModSpells;
 import com.Polarice3.Goety.common.magic.SpellStat;
-import com.Polarice3.Goety.config.AttributesConfig;
 import com.Polarice3.Goety.config.ItemConfig;
 import com.Polarice3.Goety.config.MobsConfig;
 import com.Polarice3.Goety.init.ModSounds;
@@ -47,6 +46,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
+import static com.mint.goetyoutlands.Config.ILLAGER_NECROMANCER;
+
 public class IllagerNecromancerServant extends NecromancerServant {
     private static final String STORED_ENTITY_TYPE = ModEntities.ILLAGER_NECROMANCER_SERVANT.getId().toString();
 
@@ -55,26 +56,34 @@ public class IllagerNecromancerServant extends NecromancerServant {
 
     public IllagerNecromancerServant(EntityType<? extends IllagerNecromancerServant> entityType, Level level) {
         super(entityType, level);
+        if (!level.isClientSide) {
+            applyCombatAttributes();
+            setHealth(getMaxHealth());
+        }
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return NecromancerServant.setCustomAttributes().add(Attributes.MAX_HEALTH, maxHealthForLevel(0));
+        return NecromancerServant.setCustomAttributes()
+                .add(Attributes.MAX_HEALTH, ILLAGER_NECROMANCER.baseHealth.getDefault())
+                .add(Attributes.ATTACK_DAMAGE, ILLAGER_NECROMANCER.baseAttackDamage.getDefault());
     }
 
-    private static double maxHealthForLevel(int rank) {
-        return AttributesConfig.DrownedNecromancerHealth.get() * Math.max(1.0D, rank * 1.25D);
+    private void applyCombatAttributes() {
+        MobUtil.setBaseAttributes(getAttribute(Attributes.MAX_HEALTH), ILLAGER_NECROMANCER.maxHealthForLevel(getNecroLevel()));
+        MobUtil.setBaseAttributes(getAttribute(Attributes.ATTACK_DAMAGE), ILLAGER_NECROMANCER.baseAttackDamage.get());
     }
 
     @Override
     public void setConfigurableAttributes() {
         super.setConfigurableAttributes();
-        MobUtil.setBaseAttributes(getAttribute(Attributes.MAX_HEALTH), maxHealthForLevel(getNecroLevel()));
+        applyCombatAttributes();
     }
 
     @Override
     public void setNecroLevel(int rank) {
         super.setNecroLevel(rank);
-        MobUtil.setBaseAttributes(getAttribute(Attributes.MAX_HEALTH), maxHealthForLevel(getNecroLevel()));
+        applyCombatAttributes();
+        if (getHealth() > getMaxHealth()) setHealth(getMaxHealth());
     }
 
     @Override
@@ -84,7 +93,7 @@ public class IllagerNecromancerServant extends NecromancerServant {
 
     @Override
     public int getSummonLimit(LivingEntity owner) {
-        return 2;
+        return ILLAGER_NECROMANCER.summonLimit.get();
     }
 
     public static boolean isIllagerSoulJar(ItemStack stack) {

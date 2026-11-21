@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    { "type": "forge:mod_loaded", "modid": "ars_nouveau" }
+  ],
+  "pattern": [
+    "GHG",
+    "HFH",
+    "GHG"
+  ],
+  "key": {
+    "G": { "item": "ars_nouveau:source_gem" },
+    "H": { "item": "ars_nouveau:wilden_horn" },
+    "F": { "item": "goety:hunting_focus" }
+  },
+  "result": { "item": "goety_outlands:wilden_hunt_focus", "count": 1 }
+}

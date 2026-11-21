@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -68,7 +69,8 @@ public final class IllagerNecromancerEvents {
         if (event.getLevel().isClientSide || !event.getEntity().isCrouching()
                 || !(stack.getItem() instanceof ServantSpawnEggItem egg)) return null;
         EntityType<?> type = egg.getType(stack.getTag());
-        return type == ModEntities.ILLAGER_NECROMANCER_SERVANT.get() || type == ModEntities.ARCHMAGE_NECROMANCER_SERVANT.get() ? type : null;
+        if (type == ModEntities.ILLAGER_NECROMANCER_SERVANT.get()) return type;
+        return goety_outlands.hasArsNouveau() && type == ModEntities.ARCHMAGE_NECROMANCER_SERVANT.get() ? type : null;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -97,16 +99,20 @@ public final class IllagerNecromancerEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onJarRevival(PlayerInteractEvent.EntityInteract event) {
-        if (!(event.getLevel() instanceof ServerLevel level)) return;
         ItemStack jar = event.getItemStack();
         if (!(jar.getItem() instanceof SoulJar)) return;
         CompoundTag tag = jar.getTag();
         if (tag == null) return;
         String id = tag.getCompound("entity").getString("entity");
-        if (!ModEntities.ILLAGER_NECROMANCER_SERVANT.getId().toString().equals(id)
-                && !ModEntities.ARCHMAGE_NECROMANCER_SERVANT.getId().toString().equals(id)) return;
+        boolean archmage = ModEntities.ARCHMAGE_NECROMANCER_SERVANT_ID.equals(id);
+        if (archmage && !goety_outlands.hasArsNouveau()) {
+            finish(event, useAsOrdinaryJar(event, jar));
+            return;
+        }
+        if (!(event.getLevel() instanceof ServerLevel level)) return;
+        if (!archmage && !ModEntities.ILLAGER_NECROMANCER_SERVANT.getId().toString().equals(id)) return;
         Entity target = event.getTarget();
-        if (!(target instanceof Skeleton || target instanceof SkeletonServant || target.getType().is(ModTags.EntityTypes.REGULAR_CONVERT))) return;
+        if (!isRegularRevivalTarget(target)) return;
         Player player = event.getEntity();
         if (!(SoulJar.getSummon(jar, level) instanceof NecromancerServant servant) || servant.getTrueOwner() != player) return;
 
@@ -129,6 +135,23 @@ public final class IllagerNecromancerEvents {
         SEHelper.addCooldown(player, jar.getItem(), 100);
         if (!player.getAbilities().instabuild) jar.shrink(1);
         event.setCancellationResult(InteractionResult.SUCCESS);
+    }
+
+    private static boolean isRegularRevivalTarget(Entity target) {
+        return target instanceof Skeleton || target instanceof SkeletonServant || target.getType().is(ModTags.EntityTypes.REGULAR_CONVERT);
+    }
+
+    private static InteractionResult useAsOrdinaryJar(PlayerInteractEvent.EntityInteract event, ItemStack legacyJar) {
+        if (!(event.getTarget() instanceof LivingEntity target) || !isRegularRevivalTarget(target)) return InteractionResult.FAIL;
+        if (event.getLevel().isClientSide) return InteractionResult.CONSUME;
+
+        Player player = event.getEntity();
+        ItemStack plainJar = new ItemStack(legacyJar.getItem());
+        plainJar.interactLivingEntity(player, target, event.getHand());
+        // Goety returns PASS even on success; it consumes the plain jar only after the servant spawns.
+        if (!plainJar.isEmpty()) return InteractionResult.FAIL;
+        if (!player.getAbilities().instabuild) legacyJar.shrink(1);
+        return InteractionResult.SUCCESS;
     }
 
     private static void finish(PlayerInteractEvent event, InteractionResult result) {

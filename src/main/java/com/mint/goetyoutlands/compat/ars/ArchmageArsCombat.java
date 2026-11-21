@@ -2,6 +2,7 @@ package com.mint.goetyoutlands.compat.ars;
 
 import com.Polarice3.Goety.api.entities.IOwned;
 import com.Polarice3.Goety.utils.MobUtil;
+import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -15,12 +16,28 @@ import com.mint.goetyoutlands.common.entity.ArchmageNecromancerServant;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.UUID;
 
 public final class ArchmageArsCombat {
+    private static final String NORMAL_ATTACK = "goety_outlands:archmage_normal_attack";
+
     private ArchmageArsCombat() { }
+
+    public static void registerDamageModifier() {
+        MinecraftForge.EVENT_BUS.addListener(ArchmageArsCombat::modifyNormalAttack);
+    }
+
+    private static void modifyNormalAttack(SpellModifierEvent event) {
+        if (event.caster instanceof ArchmageNecromancerServant caster && event.spellPart == EffectHarm.INSTANCE
+                && event.spellContext != null && event.spellContext.tag.getBoolean(NORMAL_ATTACK)) {
+            // Replace only Harm's flat damage; Amplify and other modifiers still belong to Ars.
+            event.builder.addDamageModifier(caster.getAttributeValue(Attributes.ATTACK_DAMAGE) - EffectHarm.INSTANCE.DAMAGE.get());
+        }
+    }
 
     public static void fire(ServerLevel level, ArchmageNecromancerServant caster, LivingEntity target) {
         int rank = caster.getNecroLevel();
@@ -31,7 +48,9 @@ public final class ArchmageArsCombat {
                 target.getZ() - caster.getZ()).normalize();
         for (int i = -rank; i <= rank; ++i) {
             // Each projectile resolves independently, even when two hits occur in the same tick.
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, caster, new LivingCaster(caster)));
+            SpellContext context = new SpellContext(level, spell, caster, new LivingCaster(caster));
+            context.tag.putBoolean(NORMAL_ATTACK, true);
+            EntitySpellResolver resolver = new EntitySpellResolver(context);
             var shot = new AlliedPassThroughProjectile(level, resolver);
             Vec3 direction = aim.yRot((float) Math.toRadians(10.0D * i));
             shot.shoot(direction.x, direction.y, direction.z, 0.75F, 0.0F);

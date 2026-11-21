@@ -131,6 +131,10 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content { includeGroup 'software.bernie.geckolib' }
+    }
     maven { // SlimeKnights and JEI
         name 'DVS1 Maven FS'
         url 'https://dvs1.progwml6.com/files/maven'
@@ -159,6 +163,7 @@ dependencies {
     implementation fg.deobf("curse.maven:TConstruct-74072:${tconstruct_version}")
     implementation fg.deobf("curse.maven:Mantle-74924:${mantle_version}")
     implementation fg.deobf("maven.modrinth:ars-nouveau:${ars_nouveau_version}")
+    compileOnly fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     implementation fg.deobf("maven.modrinth:curios:${curios_version}")
     implementation fg.deobf("maven.modrinth:patchouli:${patchouli_version}")
 

@@ -2,7 +2,6 @@ package com.mint.goetyoutlands.common.entity;
 
 import com.Polarice3.Goety.common.entities.ally.undead.skeleton.NecromancerServant;
 import com.Polarice3.Goety.common.items.ModItems;
-import com.Polarice3.Goety.config.AttributesConfig;
 import com.Polarice3.Goety.utils.MobUtil;
 import com.mint.goetyoutlands.Register.ModEntities;
 import com.mint.goetyoutlands.compat.ars.ArchmageArsCombat;
@@ -18,35 +17,42 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.ModList;
 
 import java.util.function.Predicate;
 
-public class ArchmageNecromancerServant extends NecromancerServant {
-    private static final String STORED_ENTITY_TYPE = ModEntities.ARCHMAGE_NECROMANCER_SERVANT.getId().toString();
+import static com.mint.goetyoutlands.Config.ARCHMAGE_NECROMANCER;
 
+public class ArchmageNecromancerServant extends NecromancerServant {
     public ArchmageNecromancerServant(EntityType<? extends ArchmageNecromancerServant> type, Level level) {
         super(type, level);
-    }
-
-    private static double maxHealthForLevel(int rank) {
-        return AttributesConfig.DrownedNecromancerHealth.get() * Math.max(1.0D, rank * 1.25D);
+        if (!level.isClientSide) {
+            applyCombatAttributes();
+            setHealth(getMaxHealth());
+        }
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
-        return NecromancerServant.setCustomAttributes().add(Attributes.MAX_HEALTH, maxHealthForLevel(0));
+        return NecromancerServant.setCustomAttributes()
+                .add(Attributes.MAX_HEALTH, ARCHMAGE_NECROMANCER.baseHealth.getDefault())
+                .add(Attributes.ATTACK_DAMAGE, ARCHMAGE_NECROMANCER.baseAttackDamage.getDefault());
+    }
+
+    private void applyCombatAttributes() {
+        MobUtil.setBaseAttributes(getAttribute(Attributes.MAX_HEALTH), ARCHMAGE_NECROMANCER.maxHealthForLevel(getNecroLevel()));
+        MobUtil.setBaseAttributes(getAttribute(Attributes.ATTACK_DAMAGE), ARCHMAGE_NECROMANCER.baseAttackDamage.get());
     }
 
     @Override
     public void setConfigurableAttributes() {
         super.setConfigurableAttributes();
-        MobUtil.setBaseAttributes(getAttribute(Attributes.MAX_HEALTH), maxHealthForLevel(getNecroLevel()));
+        applyCombatAttributes();
     }
 
     @Override
     public void setNecroLevel(int rank) {
         super.setNecroLevel(rank);
-        MobUtil.setBaseAttributes(getAttribute(Attributes.MAX_HEALTH), maxHealthForLevel(getNecroLevel()));
+        applyCombatAttributes();
+        if (getHealth() > getMaxHealth()) setHealth(getMaxHealth());
     }
 
     @Override
@@ -56,13 +62,13 @@ public class ArchmageNecromancerServant extends NecromancerServant {
 
     @Override
     public int getSummonLimit(LivingEntity owner) {
-        return 2;
+        return ARCHMAGE_NECROMANCER.summonLimit.get();
     }
 
     public static boolean isArchmageSoulJar(ItemStack stack) {
         if (!stack.is(ModItems.SOUL_JAR.get())) return false;
         CompoundTag saved = stack.getTagElement("entity");
-        return saved != null && STORED_ENTITY_TYPE.equals(saved.getString("entity"));
+        return saved != null && ModEntities.ARCHMAGE_NECROMANCER_SERVANT_ID.equals(saved.getString("entity"));
     }
 
     @Override
@@ -79,11 +85,8 @@ public class ArchmageNecromancerServant extends NecromancerServant {
 
     @Override
     public void performRangedAttack(LivingEntity target, float distanceFactor) {
-        if (!(level() instanceof ServerLevel server)) return;
-        if (ModList.get().isLoaded("ars_nouveau")) {
+        if (level() instanceof ServerLevel server) {
             ArchmageArsCombat.fire(server, this, target);
-        } else {
-            super.performRangedAttack(target, distanceFactor);
         }
     }
 }
