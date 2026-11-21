@@ -1,0 +1,13 @@
+{
+  "itemGroup.goety_outlands.goety_outlands_tab_items": "Goety: Outlands",
+  "itemGroup.goety_outlands.goety_outlands_tab_spawn_eggs": "Outlands: Servants",
+
+
+  "entity.goety_outlands.illager_necromancer_servant": "Illager Necromancer Servant",
+  "entity.goety_outlands.archmage_necromancer_servant": "Archmage Necromancer Servant",
+  "entity.goety_outlands.ominous_soul_bolt": "Ominous Soul Bolt",
+
+
+  "item.goety_outlands.illager_necromancer_servant_spawn_egg": "Illager Necromancer Servant Spawn Egg",
+  "item.goety_outlands.archmage_necromancer_servant_spawn_egg": "Archmage Necromancer Servant Spawn Egg"
+}

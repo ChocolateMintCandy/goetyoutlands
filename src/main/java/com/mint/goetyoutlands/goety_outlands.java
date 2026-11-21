@@ -1,5 +1,9 @@
 package com.mint.goetyoutlands;
 
+import com.mint.goetyoutlands.Register.ModEntities;
+import com.mint.goetyoutlands.Register.ModItems;
+import com.mint.goetyoutlands.Register.ModParticles;
+import com.mint.goetyoutlands.Register.goety_outlandsTab;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Blocks;
@@ -30,6 +34,11 @@ public class goety_outlands
     public goety_outlands(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
+
+        ModEntities.ENTITY_TYPES.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
+        ModParticles.PARTICLES.register(modEventBus);
+        goety_outlandsTab.CREATIVE_MODE_TABS.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);

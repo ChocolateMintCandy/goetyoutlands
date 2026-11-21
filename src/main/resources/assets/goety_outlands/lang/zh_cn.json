@@ -1,0 +1,14 @@
+{
+  "itemGroup.goety_outlands.goety_outlands_tab_items": "诡厄巫法:外域",
+  "itemGroup.goety_outlands.goety_outlands_tab_spawn_eggs": "外域:仆从",
+
+
+  "entity.goety_outlands.illager_necromancer_servant": "灾厄死灵法师仆从",
+  "entity.goety_outlands.archmage_necromancer_servant": "至高巫师死灵法师仆从",
+  "entity.goety_outlands.ominous_soul_bolt": "不祥灵魂束",
+
+
+  "item.goety_outlands.illager_necromancer_servant_spawn_egg": "灾厄死灵法师仆从刷怪蛋",
+  "item.goety_outlands.archmage_necromancer_servant_spawn_egg": "至高巫师死灵法师仆从刷怪蛋"
+
+}
