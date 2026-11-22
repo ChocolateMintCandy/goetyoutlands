@@ -10,6 +10,9 @@ import com.mint.goetyoutlands.client.model.IllagerNecromancerModel;
 import com.mint.goetyoutlands.client.renderer.ArchmageNecromancerRenderer;
 import com.mint.goetyoutlands.client.renderer.IllagerNecromancerRenderer;
 import com.mint.goetyoutlands.client.renderer.WildenHunterServantRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.entity.ChimeraProjectileRenderer;
+import com.mint.goetyoutlands.client.renderer.WildenGuardianServantRenderer;
+import com.mint.goetyoutlands.client.renderer.WildenStalkerServantRenderer;
 import com.mint.goetyoutlands.client.screen.NecromancerConfigScreen;
 import com.mint.goetyoutlands.common.entity.ArchmageNecromancerServant;
 import com.mint.goetyoutlands.common.entity.IllagerNecromancerServant;
@@ -93,7 +96,7 @@ public final class ClientModEvents {
         event.registerEntityRenderer(ModEntities.ILLAGER_NECROMANCER_SERVANT.get(), IllagerNecromancerRenderer::new);
         if (goety_outlands.hasArsNouveau()) {
             event.registerEntityRenderer(ModEntities.ARCHMAGE_NECROMANCER_SERVANT.get(), ArchmageNecromancerRenderer::new);
-            HunterRendering.register(event);
+            WildenRendering.register(event);
         }
         event.registerEntityRenderer(ModEntities.OMINOUS_SOUL_BOLT.get(), OminousSoulBoltRenderer::new);
     }
@@ -105,9 +108,12 @@ public final class ClientModEvents {
     }
 
     // Keep the Ars/GeckoLib renderer factory out of the always-loaded event subscriber.
-    private static final class HunterRendering {
+    private static final class WildenRendering {
         private static void register(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.WILDEN_HUNTER_SERVANT.get(), WildenHunterServantRenderer::new);
+            event.registerEntityRenderer(ModEntities.WILDEN_STALKER_SERVANT.get(), WildenStalkerServantRenderer::new);
+            event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN_SERVANT.get(), WildenGuardianServantRenderer::new);
+            event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN_SPIKE.get(), ChimeraProjectileRenderer::new);
         }
     }
 

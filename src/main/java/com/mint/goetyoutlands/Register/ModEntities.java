@@ -2,8 +2,12 @@ package com.mint.goetyoutlands.Register;
 
 import com.mint.goetyoutlands.common.entity.ArchmageNecromancerServant;
 import com.mint.goetyoutlands.common.entity.IllagerNecromancerServant;
+import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
+import com.mint.goetyoutlands.common.entity.WildenGuardianServant;
 import com.mint.goetyoutlands.common.entity.WildenHunterServant;
+import com.mint.goetyoutlands.common.entity.WildenStalkerServant;
 import com.mint.goetyoutlands.common.entity.projectile.OminousSoulBolt;
+import com.mint.goetyoutlands.common.entity.projectile.WildenGuardianSpike;
 import com.mint.goetyoutlands.goety_outlands;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -40,6 +44,32 @@ public final class ModEntities {
                     .<WildenHunterServant>of(WildenHunterServant::new, MobCategory.MONSTER)
                     .sized(1.2F, 1.2F).clientTrackingRange(10).setShouldReceiveVelocityUpdates(true)
                     .build(goety_outlands.MOD_ID + ":" + HUNTER_PATH));
+
+    private static final String STALKER_PATH = "wilden_stalker_servant";
+    public static final RegistryObject<EntityType<WildenStalkerServant>> WILDEN_STALKER_SERVANT =
+            ARS_ENTITY_TYPES.register(STALKER_PATH, () -> EntityType.Builder
+                    .<WildenStalkerServant>of(WildenStalkerServant::new, MobCategory.MONSTER)
+                    .sized(0.95F, 1.0F).clientTrackingRange(10).setShouldReceiveVelocityUpdates(true)
+                    .build(goety_outlands.MOD_ID + ":" + STALKER_PATH));
+
+    private static final String GUARDIAN_PATH = "wilden_guardian_servant";
+    public static final RegistryObject<EntityType<WildenGuardianServant>> WILDEN_GUARDIAN_SERVANT =
+            ARS_ENTITY_TYPES.register(GUARDIAN_PATH, () -> EntityType.Builder
+                    .<WildenGuardianServant>of(WildenGuardianServant::new, MobCategory.MONSTER)
+                    .sized(1.15F, 1.15F).clientTrackingRange(10).setShouldReceiveVelocityUpdates(true)
+                    .build(goety_outlands.MOD_ID + ":" + GUARDIAN_PATH));
+
+    public static final RegistryObject<EntityType<EntityChimeraProjectile>> WILDEN_GUARDIAN_SPIKE =
+            ARS_ENTITY_TYPES.register("wilden_guardian_spike", GuardianSpikeType::create);
+
+    // The upstream arrow constructor takes EntityType<EntityChimeraProjectile>. Resolve its factory only with Ars installed.
+    private static final class GuardianSpikeType {
+        static EntityType<EntityChimeraProjectile> create() {
+            return EntityType.Builder.<EntityChimeraProjectile>of(WildenGuardianSpike::new, MobCategory.MISC)
+                    .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true)
+                    .build(goety_outlands.MOD_ID + ":wilden_guardian_spike");
+        }
+    }
 
     public static final RegistryObject<EntityType<OminousSoulBolt>> OMINOUS_SOUL_BOLT =
             ENTITY_TYPES.register("ominous_soul_bolt", () -> EntityType.Builder

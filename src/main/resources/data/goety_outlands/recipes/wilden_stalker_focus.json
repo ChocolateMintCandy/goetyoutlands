@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    { "type": "forge:mod_loaded", "modid": "ars_nouveau" }
+  ],
+  "pattern": [
+    "GWG",
+    "WFW",
+    "GWG"
+  ],
+  "key": {
+    "G": { "item": "ars_nouveau:source_gem" },
+    "W": { "item": "ars_nouveau:wilden_wing" },
+    "F": { "item": "goety:hunting_focus" }
+  },
+  "result": { "item": "goety_outlands:wilden_stalker_focus", "count": 1 }
+}

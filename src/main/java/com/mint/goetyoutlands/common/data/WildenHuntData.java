@@ -21,9 +21,11 @@ import java.util.UUID;
 
 /** World-wide membership, not a cache of loaded entities. Unloading must not free a summon slot. */
 public final class WildenHuntData extends SavedData {
-    public static final int HUNTER_LIMIT = 8, WOLF_LIMIT = 4;
+    public static final int HUNTER_LIMIT = 8, STALKER_LIMIT = 12, GUARDIAN_LIMIT = 4, WOLF_LIMIT = 4;
     public static final String PACK_TAG = "goety_outlands:hunt_pack";
     private final Roster hunters = new Roster();
+    private final Roster stalkers = new Roster();
+    private final Roster guardians = new Roster();
     private final SetMultimap<UUID, UUID> packs = HashMultimap.create();
     // Only retained while some of this hunter's wolves still need to receive the handover.
     private final Map<UUID, UUID> successors = new HashMap<>();
@@ -35,10 +37,22 @@ public final class WildenHuntData extends SavedData {
 
     public Set<UUID> huntersOf(UUID owner) { return Collections.unmodifiableSet(hunters.byOwner.get(owner)); }
     public int hunterSlots(UUID owner) { return Math.max(0, HUNTER_LIMIT - hunters.byOwner.get(owner).size()); }
+    public Set<UUID> stalkersOf(UUID owner) { return Collections.unmodifiableSet(stalkers.byOwner.get(owner)); }
+    public int stalkerSlots(UUID owner) { return Math.max(0, STALKER_LIMIT - stalkers.byOwner.get(owner).size()); }
+    public Set<UUID> guardiansOf(UUID owner) { return Collections.unmodifiableSet(guardians.byOwner.get(owner)); }
+    public int guardianSlots(UUID owner) { return Math.max(0, GUARDIAN_LIMIT - guardians.byOwner.get(owner).size()); }
     public int wolfSlots(UUID hunter) { return Math.max(0, WOLF_LIMIT - packs.get(hunter).size()); }
 
     public void setHunterOwner(UUID hunter, @Nullable UUID owner) {
         if (hunters.set(hunter, owner)) setDirty();
+    }
+
+    public void setStalkerOwner(UUID stalker, @Nullable UUID owner) {
+        if (stalkers.set(stalker, owner)) setDirty();
+    }
+
+    public void setGuardianOwner(UUID guardian, @Nullable UUID owner) {
+        if (guardians.set(guardian, owner)) setDirty();
     }
 
     public void recordWolf(UUID hunter, UUID wolf) {
@@ -86,6 +100,8 @@ public final class WildenHuntData extends SavedData {
     @Override
     public CompoundTag save(CompoundTag tag) {
         tag.put("Hunters", writePairs(hunters.byOwner.entries()));
+        tag.put("Stalkers", writePairs(stalkers.byOwner.entries()));
+        tag.put("Guardians", writePairs(guardians.byOwner.entries()));
         tag.put("Wolves", writePairs(packs.entries()));
         tag.put("Handovers", writePairs(successors.entrySet()));
         return tag;
@@ -104,10 +120,9 @@ public final class WildenHuntData extends SavedData {
 
     private static WildenHuntData load(CompoundTag tag) {
         WildenHuntData data = new WildenHuntData();
-        for (Tag entry : tag.getList("Hunters", Tag.TAG_COMPOUND)) {
-            CompoundTag pair = (CompoundTag)entry;
-            if (pair.hasUUID("From") && pair.hasUUID("To")) data.hunters.set(pair.getUUID("To"), pair.getUUID("From"));
-        }
+        data.hunters.load(tag.getList("Hunters", Tag.TAG_COMPOUND));
+        data.stalkers.load(tag.getList("Stalkers", Tag.TAG_COMPOUND));
+        data.guardians.load(tag.getList("Guardians", Tag.TAG_COMPOUND));
         for (Tag entry : tag.getList("Wolves", Tag.TAG_COMPOUND)) {
             CompoundTag pair = (CompoundTag)entry;
             if (pair.hasUUID("From") && pair.hasUUID("To")) data.packs.put(pair.getUUID("From"), pair.getUUID("To"));
@@ -122,17 +137,24 @@ public final class WildenHuntData extends SavedData {
     }
 
     private static final class Roster {
-        final Map<UUID, UUID> ownerByHunter = new HashMap<>();
+        final Map<UUID, UUID> ownerByServant = new HashMap<>();
         final SetMultimap<UUID, UUID> byOwner = HashMultimap.create();
 
-        boolean set(UUID hunter, @Nullable UUID owner) {
-            UUID old = ownerByHunter.get(hunter);
+        void load(ListTag list) {
+            for (Tag entry : list) {
+                CompoundTag pair = (CompoundTag)entry;
+                if (pair.hasUUID("From") && pair.hasUUID("To")) set(pair.getUUID("To"), pair.getUUID("From"));
+            }
+        }
+
+        boolean set(UUID servant, @Nullable UUID owner) {
+            UUID old = ownerByServant.get(servant);
             if (Objects.equals(old, owner)) return false;
-            if (old != null) byOwner.remove(old, hunter);
-            if (owner == null) ownerByHunter.remove(hunter);
+            if (old != null) byOwner.remove(old, servant);
+            if (owner == null) ownerByServant.remove(servant);
             else {
-                ownerByHunter.put(hunter, owner);
-                byOwner.put(owner, hunter);
+                ownerByServant.put(servant, owner);
+                byOwner.put(owner, servant);
             }
             return true;
         }

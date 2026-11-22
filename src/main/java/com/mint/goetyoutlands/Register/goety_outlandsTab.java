@@ -36,6 +36,8 @@ public final class goety_outlandsTab {
                         if (goety_outlands.hasArsNouveau()) {
                             output.accept(ModItems.ARCHMAGE_NECROMANCER_SERVANT_SPAWN_EGG.get());
                             output.accept(ModItems.WILDEN_HUNTER_SERVANT_SPAWN_EGG.get());
+                            output.accept(ModItems.WILDEN_STALKER_SERVANT_SPAWN_EGG.get());
+                            output.accept(ModItems.WILDEN_GUARDIAN_SERVANT_SPAWN_EGG.get());
                         }
                     })
                     .build());
@@ -45,7 +47,11 @@ public final class goety_outlandsTab {
             CREATIVE_MODE_TABS.register("goety_outlands_tab_focuses", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + goety_outlands.MOD_ID + ".goety_outlands_tab_focuses"))
                     .icon(() -> ModItems.WILDEN_HUNT_FOCUS.get().getDefaultInstance())
-                    .displayItems((params, output) -> output.accept(ModItems.WILDEN_HUNT_FOCUS.get()))
+                    .displayItems((params, output) -> {
+                        output.accept(ModItems.WILDEN_HUNT_FOCUS.get());
+                        output.accept(ModItems.WILDEN_STALKER_FOCUS.get());
+                        output.accept(ModItems.WILDEN_GUARDIAN_FOCUS.get());
+                    })
                     .build());
         }
     }

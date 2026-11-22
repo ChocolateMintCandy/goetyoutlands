@@ -12,6 +12,9 @@ import com.mint.goetyoutlands.Register.ModEntities;
 import com.mint.goetyoutlands.common.data.WildenHuntData;
 import com.mint.goetyoutlands.common.entity.WildenHunterServant;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +29,22 @@ import java.util.function.Predicate;
 public final class WildenHuntSpell extends SummonSpell {
     @Override
     public SpellType getSpellType() { return SpellType.NONE; }
+
+    @Override
+    public SoundEvent CastingSound() { return ModSounds.WILD_PREPARE_SPELL.get(); }
+
+    @Override
+    public float castingPitch() { return 0.9F; }
+
+    @Override
+    public void playSound(ServerLevel level, Entity source, SoundEvent sound) {
+        // Keep Goety's commonResultHit particles; only substitute its recall sound.
+        if (sound == ModSounds.SUMMON_SPELL.get() && source instanceof Player player && isShifting(player)) {
+            super.playSound(level, source, SoundEvents.ILLUSIONER_MIRROR_MOVE, 1.0F, 1.0F);
+        } else {
+            super.playSound(level, source, sound);
+        }
+    }
 
     @Override
     public int defaultSoulCost() { return 16; }
@@ -105,7 +124,7 @@ public final class WildenHuntSpell extends SummonSpell {
         }
         if (spawned) {
             SummonDown(player);
-            playSound(level, player, ModSounds.SUMMON_SPELL.get());
+            playSound(level, player, SoundEvents.WOLF_GROWL, 0.8F, 0.85F);
         }
     }
 }

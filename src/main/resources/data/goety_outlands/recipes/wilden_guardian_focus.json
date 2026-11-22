@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    { "type": "forge:mod_loaded", "modid": "ars_nouveau" }
+  ],
+  "pattern": [
+    "GSG",
+    "SFS",
+    "GSG"
+  ],
+  "key": {
+    "G": { "item": "ars_nouveau:source_gem" },
+    "S": { "item": "ars_nouveau:wilden_spike" },
+    "F": { "item": "goety:hunting_focus" }
+  },
+  "result": { "item": "goety_outlands:wilden_guardian_focus", "count": 1 }
+}

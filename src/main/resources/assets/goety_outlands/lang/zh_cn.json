@@ -7,16 +7,25 @@
   "entity.goety_outlands.illager_necromancer_servant": "灾厄死灵法师仆从",
   "entity.goety_outlands.archmage_necromancer_servant": "至高巫师死灵法师仆从",
   "entity.goety_outlands.wilden_hunter_servant": "荒野猎手仆从",
+  "entity.goety_outlands.wilden_stalker_servant": "荒野伏击者仆从",
+  "entity.goety_outlands.wilden_guardian_servant": "荒野守卫者仆从",
+  "entity.goety_outlands.wilden_guardian_spike": "荒野守卫者尖刺",
   "entity.goety_outlands.ominous_soul_bolt": "不祥灵魂束",
 
 
   "item.goety_outlands.illager_necromancer_servant_spawn_egg": "灾厄死灵法师仆从刷怪蛋",
   "item.goety_outlands.archmage_necromancer_servant_spawn_egg": "至高巫师死灵法师仆从刷怪蛋",
   "item.goety_outlands.wilden_hunter_servant_spawn_egg": "荒野猎手仆从刷怪蛋",
+  "item.goety_outlands.wilden_stalker_servant_spawn_egg": "荒野伏击者仆从刷怪蛋",
+  "item.goety_outlands.wilden_guardian_servant_spawn_egg": "荒野守卫者仆从刷怪蛋",
 
-  "item.goety_outlands.wilden_hunt_focus": "荒猎聚晶",
+  "item.goety_outlands.wilden_hunt_focus": "荒野猎手聚晶",
+  "item.goety_outlands.wilden_stalker_focus": "荒野伏击聚晶",
+  "item.goety_outlands.wilden_guardian_focus": "荒野守卫聚晶",
 
   "item.goety_outlands.wilden_hunt_focus.info": "召唤荒野猎手仆从，潜行施法会把仆从传送到施法者的位置",
+  "item.goety_outlands.wilden_stalker_focus.info": "召唤荒野伏击者仆从，潜行施法会把仆从传送到施法者的位置",
+  "item.goety_outlands.wilden_guardian_focus.info": "召唤荒野守卫者仆从，潜行施法会把仆从传送到施法者的位置",
 
   "config.goety_outlands.necromancers": "外域：死灵法师仆从配置",
   "config.goety_outlands.necromancers.illager": "灾厄死灵法师",

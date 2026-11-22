@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "goety_outlands:item/wilden_guardian_focus"
+  }
+}
