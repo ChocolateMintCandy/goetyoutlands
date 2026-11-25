@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
 import com.mint.goetyoutlands.Register.ModEntities;
 import com.mint.goetyoutlands.common.entity.ArchmageNecromancerServant;
 import com.mint.goetyoutlands.common.entity.IllagerNecromancerServant;
+import com.mint.goetyoutlands.common.entity.RunicBlackguardServant;
 import com.mint.goetyoutlands.goety_outlands;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,6 +18,7 @@ public final class ModEntityEvents {
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntities.ILLAGER_NECROMANCER_SERVANT.get(), IllagerNecromancerServant.setCustomAttributes().build());
         if (goety_outlands.hasArsNouveau()) {
+            event.put(ModEntities.RUNIC_BLACKGUARD_SERVANT.get(), RunicBlackguardServant.setCustomAttributes().build());
             event.put(ModEntities.ARCHMAGE_NECROMANCER_SERVANT.get(), ArchmageNecromancerServant.setCustomAttributes().build());
             event.put(ModEntities.WILDEN_HUNTER_SERVANT.get(), WildenHunter.getModdedAttributes().build());
             event.put(ModEntities.WILDEN_STALKER_SERVANT.get(), WildenStalker.getModdedAttributes().build());

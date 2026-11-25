@@ -21,7 +21,7 @@ import java.util.UUID;
 
 /** World-wide membership, not a cache of loaded entities. Unloading must not free a summon slot. */
 public final class WildenHuntData extends SavedData {
-    public static final int HUNTER_LIMIT = 8, STALKER_LIMIT = 12, GUARDIAN_LIMIT = 4, WOLF_LIMIT = 4;
+    public static final int HUNTER_LIMIT = 8, STALKER_LIMIT = 12, GUARDIAN_LIMIT = 8, WOLF_LIMIT = 4;
     public static final String PACK_TAG = "goety_outlands:hunt_pack";
     private final Roster hunters = new Roster();
     private final Roster stalkers = new Roster();

@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "goety_outlands:spellweaver_circlet", "required": false }
+  ]
+}

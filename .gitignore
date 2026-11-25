@@ -27,3 +27,5 @@ forge*changelog.txt
 # ai assistant / agent instructions (keep out of the repo)
 AGENTS.md
 .aiassistant/
+/.ai/
+/.mcp.json

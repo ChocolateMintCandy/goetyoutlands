@@ -1,6 +1,6 @@
 package com.mint.goetyoutlands.common.entity;
 
-import com.Polarice3.Goety.common.entities.ally.Summoned;
+
 import com.Polarice3.Goety.utils.MobUtil;
 import com.mint.goetyoutlands.common.data.WildenHuntData;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public final class WildenStalkerServant extends Summoned implements GeoEntity {
+public final class WildenStalkerServant extends MagicSchoolServant implements GeoEntity {
     private static final EntityDataAccessor<Boolean> DIVING = SynchedEntityData.defineId(WildenStalkerServant.class, EntityDataSerializers.BOOLEAN);
     private static final int DIVE_COOLDOWN = 400;
     private static final RawAnimation FLY = RawAnimation.begin().thenPlay("fly");

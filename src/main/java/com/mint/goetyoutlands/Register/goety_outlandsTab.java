@@ -22,6 +22,9 @@ public final class goety_outlandsTab {
                         output.accept(soulJar(ModEntities.ILLAGER_NECROMANCER_SERVANT.getId()));
                         if (goety_outlands.hasArsNouveau()) {
                             output.accept(soulJar(ModEntities.ARCHMAGE_NECROMANCER_SERVANT.getId()));
+                            output.accept(ModItems.SPELLWEAVER_STAFF.get());
+                            output.accept(ModItems.SPELLWEAVER_ROBE.get());
+                            output.accept(ModItems.SPELLWEAVER_CIRCLET.get());
                         }
                     })
                     .build());

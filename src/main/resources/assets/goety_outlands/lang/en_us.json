@@ -13,6 +13,12 @@
   "entity.goety_outlands.ominous_soul_bolt": "Ominous Soul Bolt",
 
 
+  "item.goety_outlands.spellweaver_staff": "Spellweaver’s Staff",
+  "item.goety_outlands.spellweaver_robe": "Spellweaver’s Robe",
+  "item.goety_outlands.spellweaver_circlet": "Sigilbearer’s Circlet",
+  "item.goety_outlands.spellweaver_robe.info": "Allows Magic-school servants to heal themselves using their owner’s Soul Energy.",
+  "item.goety_outlands.spellweaver_circlet.info": "Magic-school servants can last indefinitely.",
+  "item.goety_outlands.spellweaver_circlet.cast": "Halves the casting time of Magic spells.",
   "item.goety_outlands.illager_necromancer_servant_spawn_egg": "Illager Necromancer Servant Spawn Egg",
   "item.goety_outlands.archmage_necromancer_servant_spawn_egg": "Archmage Necromancer Servant Spawn Egg",
   "item.goety_outlands.wilden_hunter_servant_spawn_egg": "Wilden Hunter Servant Spawn Egg",
@@ -21,9 +27,9 @@
   "item.goety_outlands.wilden_hunt_focus": "Wilden Hunter Focus",
   "item.goety_outlands.wilden_stalker_focus": "Wilden Stalker Focus",
   "item.goety_outlands.wilden_guardian_focus": "Wilden Defender Focus",
-  "item.goety_outlands.wilden_hunt_focus.info": "Summons Wilden Hunter Servants. Cast crouching will summon the caster's servants towards them.",
-  "item.goety_outlands.wilden_stalker_focus.info": "Summons Wilden Stalker Servants. Cast while crouching to teleport your stalkers to you.",
-  "item.goety_outlands.wilden_guardian_focus.info": "Summons Wilden Defender Servants. Cast while crouching to teleport your defenders to you.",
+  "item.goety_outlands.wilden_hunt_focus.info": "Summons 1–2 Wilden Hunters, or 4 with the Spellweaver’s Staff (limit: 8). Cast while crouching to recall your hunters.",
+  "item.goety_outlands.wilden_stalker_focus.info": "Summons 1–2 Wilden Stalkers, or 4 with the Spellweaver’s Staff (limit: 12). Cast while crouching to recall your stalkers.",
+  "item.goety_outlands.wilden_guardian_focus.info": "Summons 1–2 Wilden Defenders, or 2 with the Spellweaver’s Staff (limit: 8). Cast while crouching to recall your defenders.",
 
   "config.goety_outlands.necromancers": "Outlands: Necromancer Servant Settings",
   "config.goety_outlands.necromancers.illager": "Illager",

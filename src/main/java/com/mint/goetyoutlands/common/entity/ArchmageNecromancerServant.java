@@ -1,5 +1,7 @@
 package com.mint.goetyoutlands.common.entity;
 
+import com.Polarice3.Goety.common.entities.ModEntityType;
+import com.Polarice3.Goety.common.entities.ally.Summoned;
 import com.Polarice3.Goety.common.entities.ally.undead.skeleton.NecromancerServant;
 import com.Polarice3.Goety.common.items.ModItems;
 import com.Polarice3.Goety.utils.MobUtil;
@@ -63,6 +65,25 @@ public class ArchmageNecromancerServant extends NecromancerServant {
     @Override
     public int getSummonLimit(LivingEntity owner) {
         return ARCHMAGE_NECROMANCER.summonLimit.get();
+    }
+
+    @Override
+    public Summoned getSummon() {
+        // Keep Goety's saved unlocks and roll order. Only replace the ordinary zombie outcome.
+        Summoned rolled = super.getSummon();
+        if (rolled.getType() != ModEntityType.ZOMBIE_SERVANT.get()) return rolled;
+        return WildenPool.roll(level());
+    }
+
+    // The soul-jar check is also used without Ars; keep GeckoLib-backed constructors off that loading path.
+    private static final class WildenPool {
+        private static Summoned roll(Level level) {
+            return switch (level.random.nextInt(3)) {
+                case 0 -> new WildenHunterServant(ModEntities.WILDEN_HUNTER_SERVANT.get(), level);
+                case 1 -> new WildenStalkerServant(ModEntities.WILDEN_STALKER_SERVANT.get(), level);
+                default -> new WildenGuardianServant(ModEntities.WILDEN_GUARDIAN_SERVANT.get(), level);
+            };
+        }
     }
 
     public static boolean isArchmageSoulJar(ItemStack stack) {

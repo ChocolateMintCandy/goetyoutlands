@@ -1,7 +1,7 @@
 package com.mint.goetyoutlands.common.entity;
 
 import com.Polarice3.Goety.api.entities.IOwned;
-import com.Polarice3.Goety.common.entities.ally.Summoned;
+
 import com.Polarice3.Goety.utils.MobUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
 import com.mint.goetyoutlands.Register.ModEntities;
@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public final class WildenGuardianServant extends Summoned implements GeoEntity {
+public final class WildenGuardianServant extends MagicSchoolServant implements GeoEntity {
     private static final EntityDataAccessor<Boolean> DEFENDING = SynchedEntityData.defineId(WildenGuardianServant.class, EntityDataSerializers.BOOLEAN);
     private static final int DEFENSE_TIME = 100, DEFENSE_COOLDOWN = 200, SCATTER_COUNT = 20;
     private static final RawAnimation IDLE = RawAnimation.begin().thenPlay("idle");

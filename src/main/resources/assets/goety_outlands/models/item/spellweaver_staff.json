@@ -1,0 +1,20 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": { "particle": "goety_outlands:item/spellweaver_staff" },
+  "base": {
+    "parent": "builtin/entity",
+    "textures": { "particle": "goety_outlands:item/spellweaver_staff_model" },
+    "display": {
+      "thirdperson_righthand": { "translation": [0, -4.75, 1] },
+      "thirdperson_lefthand": { "translation": [0, -4.75, 1] },
+      "firstperson_righthand": { "translation": [0, -0.75, -2], "scale": [0.8, 0.8, 0.8] },
+      "firstperson_lefthand": { "translation": [0, -0.75, -2], "scale": [0.8, 0.8, 0.8] },
+      "ground": { "translation": [0, 4, 0], "scale": [0.4, 0.4, 0.4] },
+      "fixed": { "rotation": [0, 180, -35], "scale": [0.5, 0.5, 0.5] }
+    }
+  },
+  "perspectives": {
+    "gui": { "loader": "forge:item_layers", "gui_light": "front", "textures": { "layer0": "goety_outlands:item/spellweaver_staff" } }
+  }
+}

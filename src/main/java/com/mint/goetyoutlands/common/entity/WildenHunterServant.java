@@ -2,7 +2,7 @@ package com.mint.goetyoutlands.common.entity;
 
 import com.Polarice3.Goety.common.entities.ModEntityType;
 import com.Polarice3.Goety.common.entities.ally.BlackWolf;
-import com.Polarice3.Goety.common.entities.ally.Summoned;
+
 import com.Polarice3.Goety.utils.MobUtil;
 import com.mint.goetyoutlands.common.data.WildenHuntData;
 import net.minecraft.core.BlockPos;
@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class WildenHunterServant extends Summoned implements GeoEntity {
+public class WildenHunterServant extends MagicSchoolServant implements GeoEntity {
     private static final EntityDataAccessor<Boolean> HOWLING = SynchedEntityData.defineId(WildenHunterServant.class, EntityDataSerializers.BOOLEAN);
     private static final RawAnimation HOWL = RawAnimation.begin().thenPlay("howl_master").thenPlay("idle");
     private int howlCooldown;

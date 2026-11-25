@@ -3,6 +3,7 @@ package com.mint.goetyoutlands.Register;
 import com.mint.goetyoutlands.common.entity.ArchmageNecromancerServant;
 import com.mint.goetyoutlands.common.entity.IllagerNecromancerServant;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
+import com.mint.goetyoutlands.common.entity.RunicBlackguardServant;
 import com.mint.goetyoutlands.common.entity.WildenGuardianServant;
 import com.mint.goetyoutlands.common.entity.WildenHunterServant;
 import com.mint.goetyoutlands.common.entity.WildenStalkerServant;
@@ -37,6 +38,13 @@ public final class ModEntities {
                     .sized(0.75F, 2.4875F)
                     .clientTrackingRange(8)
                     .build(ARCHMAGE_NECROMANCER_SERVANT_ID));
+
+    private static final String BLACKGUARD_PATH = "runic_blackguard_servant";
+    public static final RegistryObject<EntityType<RunicBlackguardServant>> RUNIC_BLACKGUARD_SERVANT =
+            ARS_ENTITY_TYPES.register(BLACKGUARD_PATH, () -> EntityType.Builder
+                    .<RunicBlackguardServant>of(RunicBlackguardServant::new, MobCategory.MONSTER)
+                    .sized(0.6F, 1.95F).clientTrackingRange(8)
+                    .build(goety_outlands.MOD_ID + ":" + BLACKGUARD_PATH));
 
     private static final String HUNTER_PATH = "wilden_hunter_servant";
     public static final RegistryObject<EntityType<WildenHunterServant>> WILDEN_HUNTER_SERVANT =

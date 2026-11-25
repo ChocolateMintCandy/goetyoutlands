@@ -9,6 +9,7 @@ import com.Polarice3.Goety.utils.MobUtil;
 import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.utils.WandUtil;
 import com.mint.goetyoutlands.Register.ModEntities;
+import com.mint.goetyoutlands.Register.ModItems;
 import com.mint.goetyoutlands.common.data.WildenHuntData;
 import com.mint.goetyoutlands.common.entity.WildenHunterServant;
 import net.minecraft.server.level.ServerLevel;
@@ -103,7 +104,7 @@ public final class WildenHuntSpell extends SummonSpell {
             return;
         }
         WildenHuntData data = WildenHuntData.get(level);
-        int count = Math.min(1 + level.random.nextInt(2), data.hunterSlots(player.getUUID()));
+        int count = Math.min(staff.is(ModItems.SPELLWEAVER_STAFF.get()) ? 4 : 1 + level.random.nextInt(2), data.hunterSlots(player.getUUID()));
         int potency = stats.getPotency() + WandUtil.getPotencyLevel(player);
         int duration = Math.max(1, stats.getDuration() + WandUtil.getLevels(ModEnchantments.DURATION.get(), player));
         boolean spawned = false;
