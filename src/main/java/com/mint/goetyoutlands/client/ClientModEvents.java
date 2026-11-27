@@ -9,7 +9,9 @@ import com.Polarice3.Goety.client.render.WearRenderer;
 import com.mint.goetyoutlands.Register.ModEntities;
 import com.mint.goetyoutlands.Register.ModItems;
 import com.mint.goetyoutlands.Register.ModParticles;
+import com.mint.goetyoutlands.client.model.ArcaneBlackguardModel;
 import com.mint.goetyoutlands.client.model.SpellweaverGarbsModel;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mint.goetyoutlands.client.renderer.OminousSoulBoltRenderer;
 import com.mint.goetyoutlands.client.renderer.SpellweaverStaffView;
 import com.mint.goetyoutlands.client.model.ArchmageNecromancerModel;
@@ -26,9 +28,12 @@ import com.mint.goetyoutlands.common.entity.RunicBlackguardServant;
 import com.mint.goetyoutlands.common.entity.IllagerNecromancerServant;
 import com.mint.goetyoutlands.goety_outlands;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.util.Mth;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.resources.model.BakedModel;
@@ -119,6 +124,7 @@ public final class ClientModEvents {
         event.registerLayerDefinition(IllagerNecromancerModel.LAYER_LOCATION, IllagerNecromancerModel::createBodyLayer);
         if (goety_outlands.hasArsNouveau()) {
             event.registerLayerDefinition(ArchmageNecromancerModel.LAYER_LOCATION, ArchmageNecromancerModel::createBodyLayer);
+            event.registerLayerDefinition(ArcaneBlackguardModel.LAYER_LOCATION, ArcaneBlackguardModel::createBodyLayer);
             event.registerLayerDefinition(SpellweaverGarbsModel.ROBE, SpellweaverGarbsModel::robeLayer);
             event.registerLayerDefinition(SpellweaverGarbsModel.CIRCLET, SpellweaverGarbsModel::circletLayer);
         }
@@ -141,32 +147,47 @@ public final class ClientModEvents {
         event.registerSpriteSet(ModParticles.SOUL_BOLT_IMPACT.get(), AdditiveSpellParticle.AlphaProvider::new);
     }
 
-    // Reuse Goety's rig until the custom artwork is ready. Only our entity gets this gait.
+    // All attunements share the exported rig and rush clip; only their textures differ.
     private static final class RunicPreviewRenderer extends BlackguardRenderer<RunicBlackguardServant> {
+        private static final ResourceLocation[] TEXTURES = new ResourceLocation[5];
+        private static final RenderType[] GLOWS = new RenderType[5];
+
+        static {
+            String[] suffixes = {"", "_water", "_fire", "_earth", "_air"};
+            for (int i = 0; i < suffixes.length; i++) {
+                String path = "textures/entity/ars_blackguard" + suffixes[i];
+                TEXTURES[i] = ResourceLocation.fromNamespaceAndPath(goety_outlands.MOD_ID, path + ".png");
+                GLOWS[i] = RenderType.entityTranslucentEmissive(ResourceLocation.fromNamespaceAndPath(
+                        goety_outlands.MOD_ID, path + "_glow.png"));
+            }
+        }
+
         RunicPreviewRenderer(EntityRendererProvider.Context context) {
             super(context);
-            model = new BlackguardModel<RunicBlackguardServant>(model.root()) {
-                final ModelPart rig = root().getChild("blackguard"), torso = rig.getChild("body");
-                final ModelPart shieldArm = torso.getChild("left_arm"), hammerArm = torso.getChild("right_arm");
-                final ModelPart left = rig.getChild("left_leg"), right = rig.getChild("right_leg");
-
+            model = new ArcaneBlackguardModel(context.bakeLayer(ArcaneBlackguardModel.LAYER_LOCATION));
+            addLayer(new RenderLayer<RunicBlackguardServant, BlackguardModel<RunicBlackguardServant>>(this) {
                 @Override
-                public void setupAnim(RunicBlackguardServant mob, float stride, float amount, float age, float yaw, float pitch) {
-                    if (!mob.isRushing() || mob.isDeadOrDying()) { super.setupAnim(mob, stride, amount, age, yaw, pitch); return; }
-                    root().getAllParts().forEach(ModelPart::resetPose);
-                    float step = Mth.sin(stride * 0.95F) * Math.min(1F, amount * 1.65F);
-                    torso.xRot += 0.28F;
-                    rig.y -= 0.7F * Math.abs(step);
-                    left.xRot += 0.95F * step;
-                    right.xRot -= 0.95F * step;
-                    shieldArm.xRot -= 0.70F + 0.12F * step;
-                    hammerArm.xRot += 0.48F + 0.25F * step;
-                    ModelPart head = torso.getChild("head");
-                    head.yRot = yaw * Mth.DEG_TO_RAD;
-                    head.xRot = pitch * Mth.DEG_TO_RAD - 0.2F;
-                    shieldArm.getChild("shield").visible = mob.hasShield();
+                public void render(PoseStack pose, MultiBufferSource buffers, int light, RunicBlackguardServant mob,
+                                   float stride, float amount, float partialTicks, float age, float yaw, float pitch) {
+                    if (!isBodyVisible(mob)) return;
+                    // Reuse the parent's sampled pose, including broken-shield visibility.
+                    getParentModel().renderToBuffer(pose, buffers.getBuffer(GLOWS[attunementIndex(mob)]), LightTexture.FULL_BRIGHT,
+                            OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
                 }
-            };
+            });
+        }
+
+        private static int attunementIndex(RunicBlackguardServant mob) {
+            if (mob.isWaterAttuned()) return 1;
+            if (mob.isFireAttuned()) return 2;
+            if (mob.isEarthAttuned()) return 3;
+            if (mob.isAirAttuned()) return 4;
+            return 0;
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(RunicBlackguardServant mob) {
+            return TEXTURES[attunementIndex(mob)];
         }
     }
 

@@ -3,17 +3,22 @@ package com.mint.goetyoutlands.client.renderer;
 import com.Polarice3.Goety.common.items.magic.DarkWand;
 import com.mint.goetyoutlands.client.model.SpellweaverStaffModel;
 import com.mint.goetyoutlands.common.item.SpellweaverStaff;
+import com.mint.goetyoutlands.goety_outlands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public final class SpellweaverStaffRenderer extends GeoItemRenderer<SpellweaverStaff> {
+    private static final RenderType GLOW = RenderType.entityTranslucentEmissive(ResourceLocation.fromNamespaceAndPath(
+            goety_outlands.MOD_ID, "textures/item/spellweaver_staff_model_glowmask.png"));
     private final SpellweaverStaffModel staffModel;
     private SpellweaverStaffRenderer(SpellweaverStaffModel model) { super(model); this.staffModel = model; }
 
@@ -37,6 +42,9 @@ public final class SpellweaverStaffRenderer extends GeoItemRenderer<SpellweaverS
         boolean display = renderPerspective == ItemDisplayContext.FIXED || renderPerspective == ItemDisplayContext.GROUND;
         pose.translate(0, -(display ? 14.0 : 9.25) / 16.0 - 0.01, 0);
         super.actuallyRender(pose, staff, baked, type, buffers, vertices, true, partial, light, overlay, red, green, blue, alpha);
+        // Share the sampled pose and grip transform; only the mask gets full brightness.
+        super.actuallyRender(pose, staff, baked, GLOW, buffers, buffers.getBuffer(GLOW), true, partial,
+                LightTexture.FULL_BRIGHT, overlay, red, green, blue, alpha);
         pose.popPose();
     }
 }

@@ -24,7 +24,7 @@ import java.util.UUID;
 public final class RunicBlackguardServant extends BlackguardServant {
     private static final EntityDataAccessor<Boolean> RUSHING = SynchedEntityData.defineId(RunicBlackguardServant.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ATTUNEMENT = SynchedEntityData.defineId(RunicBlackguardServant.class, EntityDataSerializers.STRING);
-    private static final String ATTUNEMENT_TAG = "RunicAttunement", NONE = "none", WATER = "water";
+    private static final String ATTUNEMENT_TAG = "RunicAttunement", NONE = "none", WATER = "water", FIRE = "fire", EARTH = "earth", AIR = "air";
     private static final AttributeModifier IMPACT = new AttributeModifier(UUID.fromString("59475453-0a31-4910-84fa-08205eba2dad"),
             "Runic charge impact", 0.5D, AttributeModifier.Operation.ADDITION);
     private int impactTarget = -1;
@@ -66,6 +66,9 @@ public final class RunicBlackguardServant extends BlackguardServant {
     }
 
     public boolean isWaterAttuned() { return WATER.equals(entityData.get(ATTUNEMENT)); }
+    public boolean isFireAttuned() { return FIRE.equals(entityData.get(ATTUNEMENT)); }
+    public boolean isEarthAttuned() { return EARTH.equals(entityData.get(ATTUNEMENT)); }
+    public boolean isAirAttuned() { return AIR.equals(entityData.get(ATTUNEMENT)); }
     public boolean isRushing() { return entityData.get(RUSHING); }
     boolean rushReady() { return level().getGameTime() >= nextRush; }
     void beginRush() {
@@ -95,8 +98,11 @@ public final class RunicBlackguardServant extends BlackguardServant {
         boolean hit;
         try { hit = super.doHurtTarget(target); }
         finally { if (knockback != null) knockback.removeModifier(IMPACT); }
-        if (hit && isWaterAttuned() && level() instanceof ServerLevel server && target instanceof LivingEntity living && living.isAlive()) {
-            RunicBlackguardArsMagic.freeze(server, this, living);
+        if (hit && level() instanceof ServerLevel server && target instanceof LivingEntity living && living.isAlive()) {
+            if (isWaterAttuned()) RunicBlackguardArsMagic.freeze(server, this, living);
+            else if (isFireAttuned()) RunicBlackguardArsMagic.igniteAndFlare(server, this, living);
+            else if (isEarthAttuned()) RunicBlackguardArsMagic.delayedCrush(server, this, living);
+            else if (isAirAttuned()) RunicBlackguardArsMagic.launchAndWindshear(server, this, living);
         }
         return hit;
     }
@@ -111,7 +117,8 @@ public final class RunicBlackguardServant extends BlackguardServant {
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        entityData.set(ATTUNEMENT, WATER.equals(tag.getString(ATTUNEMENT_TAG)) ? WATER : NONE);
+        String attunement = tag.getString(ATTUNEMENT_TAG);
+        entityData.set(ATTUNEMENT, WATER.equals(attunement) || FIRE.equals(attunement) || EARTH.equals(attunement) || AIR.equals(attunement) ? attunement : NONE);
         nextRush = level().getGameTime() + Math.max(0, Math.min(BlackguardRushGoal.COOLDOWN, tag.getInt("RunicRushCooldown")));
         impactTarget = -1;
         endRush();
